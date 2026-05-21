@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Rogue — Préparation Dataset Object Detection</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-size: 22px;
+      color: #93c5fd;
+    }
+
+    p, li {
+      font-size: 16px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      border: 1px solid #334155;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .progress-wrapper {
+      width: 100%;
+      height: 18px;
+      background: #334155;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #22c55e;
+      transition: width 0.2s ease;
+    }
+
+    .counter {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: #475569;
+      color: white;
+    }
+
+    .danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    video, canvas, img {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 12px;
+      background: black;
+    }
+
+    .tip {
+      background: #172554;
+      border-left: 5px solid #3b82f6;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+    }
+
+    .checklist label {
+      display: block;
+      margin-top: 10px;
+      background: #334155;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .footer {
+      margin-top: 32px;
+      opacity: 0.8;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    a {
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mini Rogue — Préparation Dataset IA</h1>
+
+    <div class="card">
+      <p>
+        Cette page sert à préparer un dataset de détection d'objet pour entraîner un modèle TFLite capable de détecter une carte Mini Rogue.
+      </p>
+    </div>
+
+    <h2>Étape 1 — Capturer les photos</h2>
+
+    <div class="card">
+      <button class="primary" id="startCamera">Activer la caméra</button>
+
+      <video id="video" autoplay playsinline></video>
+
+      <button class="primary" id="captureBtn">Capturer une photo</button>
+
+      <canvas id="canvas"></canvas>
+
+      <div class="counter">
+        Photos capturées : <span id="photoCount">0</span> / 50
+      </div>
+
+      <div class="progress-wrapper">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <button class="secondary" id="downloadBtn">Télécharger la dernière photo</button>
+      <button class="danger" id="resetBtn">Réinitialiser le compteur</button>
+    </div>
+
+    <div class="card">
+      <h2>Checklist de variations obligatoires</h2>
+
+      <div class="checklist">
+        <label><input type="checkbox"> Carte vue de face</label>
+        <label><input type="checkbox"> Carte inclinée</label>
+        <label><input type="checkbox"> Carte tenue en main</label>
+        <label><input type="checkbox"> Fond table</label>
+        <label><input type="checkbox"> Fond sol</label>
+        <label><input type="checkbox"> Fond mur</label>
+        <label><input type="checkbox"> Lumière du jour</label>
+        <label><input type="checkbox"> Lumière intérieure</label>
+        <label><input type="checkbox"> Zone sombre / ombre</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Étape 2 — Annotation</h2>
+
+      <ol style="padding-left:20px; margin-top:10px;">
+        <li>Ouvre Edge Impulse ou Roboflow</li>
+        <li>Crée un projet <strong>Object Detection</strong></li>
+        <li>Importe les photos</li>
+        <li>Dessine un rectangle autour de chaque carte</li>
+        <li>Utilise toujours le label : <strong>carte</strong></li>
+      </ol>
+
+      <div class="tip">
+        Le rectangle doit entourer uniquement la carte, sans trop de fond autour.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Étape 3 — Entraînement</h2>
+
+      <ol style="padding-left:20px; margin-top:10px;">
+        <li>Lancer l'entraînement</li>
+        <li>Sélectionner le modèle <strong>Fast</strong></li>
+        <li>Attendre la fin de l'entraînement</li>
+        <li>Exporter le modèle en <strong>TFLite</strong></li>
+      </ol>
+
+      <div class="tip">
+        Le modèle Fast est suffisant pour détecter un rectangle de carte sur mobile.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Plateformes recommandées</h2>
+
+      <ul>
+        <li><a href="https://edgeimpulse.com" target="_blank">Edge Impulse</a></li>
+        <li><a href="https://roboflow.com" target="_blank">Roboflow</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      Fichier HTML autonome compatible Android / iPhone.
+    </div>
+  </div>
+
+  <script>
+    const startCameraBtn = document.getElementById('startCamera');
+    const captureBtn = document.getElementById('captureBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const photoCountText = document.getElementById('photoCount');
+    const progressBar = document.getElementById('progressBar');
+
+    let photoCount = parseInt(localStorage.getItem('photoCount') || '0');
+    updateUI();
+
+    startCameraBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment'
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+      } catch (err) {
+        alert('Impossible d’accéder à la caméra : ' + err.message);
+      }
+    });
+
+    captureBtn.addEventListener('click', () => {
+      if (!video.videoWidth) {
+        alert('Caméra non active');
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      ctx.drawImage(video, 0, 0);
+
+      photoCount++;
+      localStorage.setItem('photoCount', photoCount);
+
+      updateUI();
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'mini-rogue-photo.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      photoCount = 0;
+      localStorage.setItem('photoCount', '0');
+      updateUI();
+    });
+
+    function updateUI() {
+      photoCountText.textContent = photoCount;
+      const percent = Math.min((photoCount / 50) * 100, 100);
+      progressBar.style.width = percent + '%';
+    }
+  </script>
+</body>
+</html>
